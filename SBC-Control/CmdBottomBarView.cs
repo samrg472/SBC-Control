@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Threading;
 
 namespace SBC_Control
@@ -15,14 +16,14 @@ namespace SBC_Control
             {
                 var method = this._bottomBar.GetType().GetMethod("get_IsHeadphone");
 
-                Debug.Assert(method != null, nameof(method) + " != null");
+                Trace.Assert(method != null, nameof(method) + " != null");
                 return (bool) method.Invoke(this._bottomBar, new object[0]);
             }
             set
             {
                 var method = this._bottomBar.GetType().GetMethod("set_IsHeadphone", new Type[] { typeof(bool) });
 
-                Debug.Assert(method != null, nameof(method) + " != null");
+                Trace.Assert(method != null, nameof(method) + " != null");
                 this._dispatcher.Invoke(() =>
                 {
                     method.Invoke(this._bottomBar, new object[1] { value });
@@ -30,10 +31,16 @@ namespace SBC_Control
             }
         }
 
-        public CmdBottomBarView(Dispatcher dispatcher, object bottomBar)
+        public CmdBottomBarView(object bottomBar)
         {
-            this._dispatcher = dispatcher;
+            Trace.Assert(bottomBar != null, nameof(bottomBar) + " != null");
             this._bottomBar = bottomBar;
+
+            var type = this._bottomBar.GetType();
+            this._dispatcher = (Dispatcher) type
+                .GetField("mainThreadDispatcher", BindingFlags.NonPublic | BindingFlags.Instance)?
+                .GetValue(bottomBar);
+            Trace.Assert(this._dispatcher != null, nameof(this._dispatcher) + " != null");
         }
     }
 }

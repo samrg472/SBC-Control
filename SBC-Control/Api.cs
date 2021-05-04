@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace SBC_Control
 {
-    
+
     public class Api
     {
         private const byte CmdActivateHeadphones = 0x01;
@@ -15,14 +15,14 @@ namespace SBC_Control
 
         private const byte ResHeadphonesActive = 0x01;
         private const byte ResSrsActive = 0x02;
-        
+
         private CmdBottomBarView _bottomBar;
-        
-        public static void Init(Dispatcher dispatcher, object bottomBar)
+
+        public static void Init(object bottomBar)
         {
             var api = new Api
             {
-                _bottomBar = new CmdBottomBarView(dispatcher, bottomBar)
+                _bottomBar = new CmdBottomBarView(bottomBar)
             };
             api.StartServer();
         }

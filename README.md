@@ -51,7 +51,7 @@ namespace Creative.SBConnect.UI.Framework.CMDViewModels.BottomBar
     {
         public void InitSbcControl()
         {
-            Api.Init(this.mainThreadDispatcher, this);
+            Api.Init(this);
         }
     }
 }
