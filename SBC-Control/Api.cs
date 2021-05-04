@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Windows.Threading;
 
 namespace SBC_Control
 {
@@ -48,7 +47,7 @@ namespace SBC_Control
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Socket accept error", e);
+                        Console.WriteLine("Socket accept error: {0}", e);
                         Thread.Sleep(100);
                     }
 
