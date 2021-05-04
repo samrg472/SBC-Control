@@ -69,4 +69,4 @@ Take a look at the AutoHotkey scripts for usage of SBC Control.
 
 # Credits
 
-- [G33kDude's Socket library](`https://github.com/G33kDude/Socket.ahk`) for AutoHotkey
+- [G33kDude's Socket library](https://github.com/G33kDude/Socket.ahk) for AutoHotkey
