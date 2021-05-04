@@ -46,7 +46,7 @@ ShowDialog(msg) {
     bg_color := "121212"
 
     SoundGet, volume
-    volume := Floor(volume)
+    volume := Round(volume)
 
     SoundGet, is_muted,, MUTE
     if (is_muted == "On")
