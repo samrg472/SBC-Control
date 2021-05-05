@@ -45,6 +45,7 @@ namespace SBC_Control
             var configPath = GetConfigPath();
             var serializer = new XmlSerializer(typeof(GlobalConfig));
             using var stream = new FileStream(configPath, FileMode.Open, FileAccess.Write);
+            stream.SetLength(0);
             serializer.Serialize(stream, this);
         }
 
