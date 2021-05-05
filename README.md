@@ -1,6 +1,11 @@
 # SBC Control
 
-SBC Control will provide hotkey functionality for Sound Blaster Command.
+SBC Control improves functionality for Creative Sound Blaster Command.
+
+### Features
+
+- Advanced hotkey functionality using AutoHotkey
+- Save and restore volumes for headphones and speakers
 
 ## Patching Sound Blaster Command for SBC Control compatibility
 
