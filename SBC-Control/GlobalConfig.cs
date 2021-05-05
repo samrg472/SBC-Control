@@ -24,7 +24,8 @@ namespace SBC_Control
                     var config = new GlobalConfig();
                     serializer.Serialize(stream, config);
                     ConfigIsNew = true;
-                    return config;
+                    _config = config;
+                    return _config;
                 }
 
                 _config = (GlobalConfig) serializer.Deserialize(stream);
