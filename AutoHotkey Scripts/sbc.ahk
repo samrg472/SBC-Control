@@ -9,16 +9,26 @@ Shift & F1::
     VarSetCapacity(buf, 1, 0x01)
     client := ConnectToSBC()
     client.Send(&buf, 1)
+    client.Recv(buf, 5)
     client.Disconnect()
-    ShowDialog("Switching to headphones")
+
+    volume := Round(NumGet(&buf, 0, "Float"))
+    is_muted := NumGet(&buf, 4, "UChar")
+
+    ShowDialog("Switched to headphones", volume, is_muted)
 return
 
 Shift & F2::
     VarSetCapacity(buf, 1, 0x02)
     client := ConnectToSBC()
     client.Send(&buf, 1)
+    client.Recv(buf, 5)
     client.Disconnect()
-    ShowDialog("Switching to surround sound")
+
+    volume := Round(NumGet(&buf, 0, "Float"))
+    is_muted := NumGet(&buf, 4, "UChar")
+
+    ShowDialog("Switched to surround sound", volume, is_muted)
 return
 
 Shift & F3::
@@ -29,10 +39,19 @@ Shift & F3::
     client.Disconnect()
 
     device := NumGet(&buf, 0, "UChar")
+    SoundGet, volume
+    volume := Round(volume)
+
+    SoundGet, is_muted,, MUTE
+    if (is_muted == "On")
+        is_muted := True
+    else
+        is_muted := False
+
     if (device == 0x01) {
-        ShowDialog("Headphones active")
+        ShowDialog("Headphones active", volume, is_muted)
     } else if (device == 0x02) {
-        ShowDialog("Surround sound active")
+        ShowDialog("Surround sound active", volume, is_muted)
     }
 return
 
@@ -42,17 +61,8 @@ ConnectToSBC() {
     return client
 }
 
-ShowDialog(msg) {
+ShowDialog(msg, volume, is_muted) {
     bg_color := "121212"
-
-    SoundGet, volume
-    volume := Round(volume)
-
-    SoundGet, is_muted,, MUTE
-    if (is_muted == "On")
-        is_muted := True
-    else
-        is_muted := False
 
     Gui, +AlwaysOnTop +ToolWindow -Caption -Border
     Gui, Margin, 10, 10

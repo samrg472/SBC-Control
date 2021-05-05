@@ -6,6 +6,7 @@ using System.Threading;
 namespace SBC_Control
 {
 
+    // ReSharper disable once UnusedType.Global
     public class Api
     {
         private const byte CmdActivateHeadphones = 0x01;
@@ -17,6 +18,7 @@ namespace SBC_Control
 
         private CmdBottomBarView _bottomBar;
 
+        // ReSharper disable once UnusedMember.Global
         public static void Init(object bottomBar)
         {
             var api = new Api
@@ -44,6 +46,7 @@ namespace SBC_Control
                     {
                         clientSocket = server.AcceptSocket();
                         clientSocket.Blocking = true;
+                        clientSocket.NoDelay = true;
                     }
                     catch (Exception e)
                     {
@@ -79,16 +82,35 @@ namespace SBC_Control
                         switch (bytes[0])
                         {
                             case CmdActivateHeadphones:
+                            {
                                 _bottomBar.IsHeadphone = true;
+
+                                var floatBytes = BitConverter.GetBytes(_bottomBar.MasterVolume);
+                                var muteBytes = BitConverter.GetBytes(_bottomBar.MasterMute);
+                                clientSocket.Send(floatBytes);
+                                clientSocket.Send(muteBytes);
+
                                 break;
+                            }
                             case CmdActivateSrs:
+                            {
                                 _bottomBar.IsHeadphone = false;
+
+                                var floatBytes = BitConverter.GetBytes(_bottomBar.MasterVolume);
+                                var muteBytes = BitConverter.GetBytes(_bottomBar.MasterMute);
+                                clientSocket.Send(floatBytes);
+                                clientSocket.Send(muteBytes);
+
                                 break;
+                            }
                             case CmdGetActiveDevice:
+                            {
                                 var hpActive = _bottomBar.IsHeadphone;
                                 var res = hpActive ? ResHeadphonesActive : ResSrsActive;
                                 clientSocket.Send(new[] {res});
+
                                 break;
+                            }
                         }
                     }
                 }

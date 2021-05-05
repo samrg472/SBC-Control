@@ -16,23 +16,28 @@ namespace SBC_Control
             get
             {
                 var method = _bottomBar.GetType().GetMethod("get_IsHeadphone");
-
                 Trace.Assert(method != null, nameof(method) + " != null");
                 return (bool) method.Invoke(_bottomBar, new object[0]);
             }
             set
             {
-                var method = _bottomBar.GetType().GetMethod("set_IsHeadphone", new[] { typeof(bool) });
+                if (value == IsHeadphone)
+                {
+                    return;
+                }
 
+                var method = _bottomBar.GetType().GetMethod("set_IsHeadphone", new[] { typeof(bool) });
                 Trace.Assert(method != null, nameof(method) + " != null");
+
                 _dispatcher.Invoke(() =>
                 {
                     method.Invoke(_bottomBar, new object[] { value });
+                    OnPropChanged(this, new PropertyChangedEventArgs("IsHeadphone"));
                 });
             }
         }
 
-        private float MasterVolume
+        public float MasterVolume
         {
             get
             {
@@ -41,7 +46,7 @@ namespace SBC_Control
                 Trace.Assert(method != null, nameof(method) + " != null");
                 return (float) method.Invoke(_bottomBar, new object[0]);
             }
-            set
+            private set
             {
                 var method = _bottomBar.GetType().GetMethod("set_Volume", new[] { typeof(float) });
 
@@ -53,7 +58,7 @@ namespace SBC_Control
             }
         }
 
-        private bool MasterMute
+        public bool MasterMute
         {
             get
             {
@@ -62,7 +67,7 @@ namespace SBC_Control
                 Trace.Assert(method != null, nameof(method) + " != null");
                 return (bool) method.Invoke(_bottomBar, new object[0]);
             }
-            set
+            private set
             {
                 var method = _bottomBar.GetType().GetMethod("set_Mute", new[] { typeof(bool) });
 
@@ -113,7 +118,6 @@ namespace SBC_Control
                     config.SrsMasterVolume = MasterVolume;
                     config.SrsMasterMute = MasterMute;
                 }
-
 
                 config.Save();
             }
