@@ -1,9 +1,19 @@
 #NoEnv
 #NoTrayIcon
+#SingleInstance
 #Include .\socket.ahk
+
+; Configuration
 
 global dialog_x_pos := 50
 global dialog_y_pos := 201
+
+; Script
+
+global gui_notif_line1 := ""
+global gui_notif_line2 := ""
+
+BuildNotificationPopup()
 
 Shift & F1::
     VarSetCapacity(buf, 1, 0x01)
@@ -62,24 +72,33 @@ ConnectToSBC() {
 }
 
 ShowDialog(msg, volume, is_muted) {
-    bg_color := "121212"
+    GuiControl, Text, gui_notif_line1, %msg%
 
+    if (is_muted) {
+        GuiControl, Text, gui_notif_line2, % "Volume: muted (" . volume . ")"
+    } else {
+        GuiControl, Text, gui_notif_line2, % "Volume: " . volume
+    }
+
+    Gui, Show, NA x%dialog_x_pos% y%dialog_y_pos%
+    SetTimer, HideNotificationPopup, -2300
+}
+
+HideNotificationPopup:
+    Gui, Hide
+return
+
+BuildNotificationPopup() {
     Gui, +AlwaysOnTop +ToolWindow -Caption -Border
     Gui, Margin, 10, 10
-    Gui, Color, %bg_color%
+    Gui, Color, 121212
 
-    Gui, Font, s12 cf7f7f7
-    Gui, Add, Text,, %msg%
-
-    if (is_muted)
-        Gui, Add, Text, ce3e3e3, % "Volume: muted (" . volume . ")"
-    else
-        Gui, Add, Text, ce3e3e3, % "Volume: " . volume
+    Gui, Font, s12
+    Gui, Add, Text, vgui_notif_line1 cf7f7f7 w200,
+    Gui, Add, Text, vgui_notif_line2 ce3e3e3 w150,
 
     Gui +LastFound
     WinSet, Transparent, 245
 
-    Gui, Show, NA x%dialog_x_pos% y%dialog_y_pos%
-    Sleep 2300
-    Gui, Destroy
+    Gui, Hide
 }
